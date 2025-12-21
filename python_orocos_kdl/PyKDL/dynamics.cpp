@@ -27,6 +27,10 @@
 #include <iomanip>
 #include <kdl/chaindynparam.hpp>
 #include <kdl/jntspaceinertiamatrix.hpp>
+#include <kdl/chainfdsolver.hpp>
+#include <kdl/chainfdsolver_recursive_newton_euler.hpp>
+#include <kdl/chainidsolver.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
 #include <kdl/kinfam_io.hpp>
 #include "PyKDL.h"
 
@@ -90,4 +94,29 @@ void init_dynamics(pybind11::module &m)
     chain_dyn_param.def("JntToCoriolis", &ChainDynParam::JntToCoriolis, py::arg("q"), py::arg("q_dot"), py::arg("coriolis"));
     chain_dyn_param.def("JntToMass", &ChainDynParam::JntToMass, py::arg("q"), py::arg("H"));
     chain_dyn_param.def("JntToGravity", &ChainDynParam::JntToGravity, py::arg("q"), py::arg("gravity"));
+
+    // ------------------------------
+    // ChainFdSolver
+    // ------------------------------
+    py::class_<ChainFdSolver, SolverI> chain_fd_solver(m, "ChainFdSolver");
+    chain_fd_solver.def("CartToJnt", &ChainFdSolver::CartToJnt, py::arg("q"), py::arg("q_dot"), py::arg("torques"), py::arg("f_ext"), py::arg("q_dotdot"));
+
+
+    // ------------------------------
+    // ChainFdSolver_RNE
+    // ------------------------------
+    py::class_<ChainFdSolver_RNE, ChainFdSolver> chain_fd_solver_RNE(m, "ChainFdSolver_RNE");
+    chain_fd_solver_RNE.def(py::init<const Chain&, Vector>(), py::arg("chain"), py::arg("grav"));
+
+    // ------------------------------
+    // ChainIdSolver
+    // ------------------------------
+    py::class_<ChainIdSolver, SolverI> chain_id_solver(m, "ChainIdSolver");
+    chain_id_solver.def("CartToJnt", &ChainIdSolver::CartToJnt, py::arg("q"), py::arg("q_dot"), py::arg("q_dot_dot"), py::arg("f_ext"), py::arg("torques"));
+
+    // ------------------------------
+    // ChainIdSolver_RNE
+    // ------------------------------
+    py::class_<ChainIdSolver_RNE, ChainIdSolver> chain_id_solver_RNE(m, "ChainIdSolver_RNE");
+    chain_id_solver_RNE.def(py::init<const Chain&, Vector>(), py::arg("chain"), py::arg("grav"));
 }

@@ -509,18 +509,4 @@ void init_kinfam(pybind11::module &m)
     chain_jnt_to_jac_dot_solver.def("setInertialRepresentation", &ChainJntToJacDotSolver::setInertialRepresentation);
     chain_jnt_to_jac_dot_solver.def("setRepresentation", &ChainJntToJacDotSolver::setRepresentation,
                                     py::arg("representation"));
-
-
-    // ------------------------------
-    // ChainIdSolver
-    // ------------------------------
-    py::class_<ChainIdSolver, SolverI> chain_id_solver(m, "ChainIdSolver");
-    chain_id_solver.def("CartToJnt", &ChainIdSolver::CartToJnt, py::arg("q"), py::arg("q_dot"), py::arg("q_dot_dot"), py::arg("f_ext"), py::arg("torques"));
-
-
-    // ------------------------------
-    // ChainIdSolver_RNE
-    // ------------------------------
-    py::class_<ChainIdSolver_RNE, ChainIdSolver> chain_id_solver_RNE(m, "ChainIdSolver_RNE");
-    chain_id_solver_RNE.def(py::init<const Chain&, Vector>(), py::arg("chain"), py::arg("grav"));
 }
