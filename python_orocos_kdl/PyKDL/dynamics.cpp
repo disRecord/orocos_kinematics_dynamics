@@ -68,6 +68,11 @@ void init_dynamics(pybind11::module &m)
 
         jm((unsigned int)i, (unsigned int)j) = value;
     });
+    jnt_space_inertia_matrix.def_property("data", [](py::object& obj)
+    {
+        JntSpaceInertiaMatrix * jm = obj.cast<JntSpaceInertiaMatrix *>();
+        return py::array_t<double>({jm->rows(), jm->columns()}, {sizeof(double), sizeof(double)*jm->rows()}, jm->data.data(), obj);
+    }, nullptr);
     jnt_space_inertia_matrix.def("__repr__", [](const JntSpaceInertiaMatrix &jm)
     {
         std::ostringstream oss;
